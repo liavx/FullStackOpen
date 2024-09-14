@@ -5,7 +5,7 @@ sequenceDiagram
 
     browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
     sends the new note to the server
-    server-->>browser: URL redirect
+    server->>browser: URL redirect
     asks to reload the address defined in the headers location
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
