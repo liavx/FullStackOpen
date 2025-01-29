@@ -3,10 +3,12 @@
 /* eslint-disable no-unused-vars */
 import { useState } from 'react'
 const Header = (props) => <h1>{props.value}</h1>
-const Button = (props) => <button onClick ={props.onClick}>{props.value}</button>
+const Button = ({value,handleClicks}) => <button onClick = {() => handleClicks((summ) => summ +1)}>{value}</button>
 const StatisticLine = (props) => <tr><td>{props.text}</td><td>{props.value}</td></tr> 
-const Statistics = (props) => {
-  if(props.totalSum == 0)
+const Statistics = ({values}) => {
+  const total = values.reduce ((sum,value) => sum + value , 0)
+  const positive = (100 * values[0] / total)
+  if(total == 0)
     return(
   <p>no feedback given</p>
   )
@@ -16,12 +18,12 @@ const Statistics = (props) => {
     <br/>
     <table>
       <tbody>
-    <StatisticLine text="good" value ={props.good} />
-    <StatisticLine text="bad" value ={props.bad} />
-    <StatisticLine text="neutral" value ={props.neutral} />
-    <StatisticLine text="Sum" value ={props.totalSum} />
-    <StatisticLine text="Avg" value ={props.calculateAvg} />
-    <StatisticLine text="Positive" value ={props.calculatePos} />
+    <StatisticLine text="good" value ={values[0]} />
+    <StatisticLine text="bad" value ={values[2]} />
+    <StatisticLine text="neutral" value ={values[1]} />
+    <StatisticLine text="Sum" value ={total} />
+    <StatisticLine text="Avg" value ={total/3} />
+    <StatisticLine text="Positive" value ={`${positive}%`} />
     </tbody>
     </table>
 </>
@@ -32,25 +34,14 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
-  const handleClicks =(props) =>{
-    if(props == "neutral")
-      setNeutral(neutral+1)
-    if(props == "good")
-      setGood(good+1)
-    if(props == "bad")
-      setBad(bad+1)
-  }
-  const totalSum = () => good+bad+neutral
-  const calculateAvg = () => (good - bad)/ totalSum()
-  const calculatePos = () => good/totalSum()
+
   return (
     <div>
       <Header value ="give feedback" />
-      <Button onClick = {() => handleClicks("good")} value = "good" />
-      <Button onClick = {() => handleClicks("neutral")} value = "neutral" />
-      <Button onClick = {() => handleClicks("bad")} value = "bad" /> 
-      <Statistics totalSum = {totalSum()} calculateAvg ={calculateAvg()} calculatePos={calculatePos()}
-        good = {good} bad = {bad} neutral = {neutral}  />
+      <Button handleClicks = {setGood} value = "good" />
+      <Button handleClicks = {setNeutral} value = "neutral" />
+      <Button handleClicks = {setBad} value = "bad" /> 
+      <Statistics values = {[good , neutral , bad]} />
     </div>
   )
 }
