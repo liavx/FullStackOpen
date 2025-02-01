@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 
-import { useState } from "react";
+import { useState ,useEffect } from "react";
+import axios from 'axios'
 
 const PersonForm = ({newName,handleValue,newNumber,addPerson}) =>{
 return(
@@ -61,13 +62,11 @@ const SearchInput = ({searchTerm,handleSearch}) =>{
 
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "050-1234567" },
-  ]);
+  const [persons, setPersons] = useState([{}]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-
+  
   const handleSearch = (event) => {
     setSearchTerm(event.target.value.toLowerCase());
   };
@@ -98,8 +97,15 @@ const App = () => {
   // Filter persons based on searchTerm
   const filteredPersons = searchTerm
     ? persons.filter((person) => person.name.toLowerCase().includes(searchTerm))
-    : persons;
-
+    : persons
+    
+  useEffect ( () =>{
+    axios
+    .get('http://localhost:3001/persons')
+    .then(response =>{
+      setPersons(response.data)
+    })
+  },[])
   return (
     <div>
       <h2>Phonebook</h2>
