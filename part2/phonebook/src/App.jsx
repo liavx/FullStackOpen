@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
-import { useState ,useEffect } from "react";
-import axios from 'axios'
+import { useState ,useEffect } from "react"
+import phoneService from './services/phonebook.js'
 
 const PersonForm = ({newName,handleValue,newNumber,addPerson}) =>{
 return(
@@ -34,19 +34,18 @@ return(
 )
 }
 
-const PersonList = ({filteredPersons}) =>{
+const PersonList = ({filteredPersons , deletePerson}) =>{
   return(
   <ul>
   {filteredPersons.map((person) => (
-    <PersonName person={person.name} key={person.name} number={person.number} />
+    <li key = {person.id}>
+   {person.name} , {person.number} <button onClick={() => deletePerson(person.id,person.name)}>delete</button>
+    </li>
   ))}
 </ul>
   )
 }
 
-const PersonName = ({ person, number }) => {
-  return <li>{person}, {number}</li>;
-};
 
 const SearchInput = ({searchTerm,handleSearch}) =>{
   return(
@@ -62,14 +61,14 @@ const SearchInput = ({searchTerm,handleSearch}) =>{
 
 
 const App = () => {
-  const [persons, setPersons] = useState([{}]);
-  const [newName, setNewName] = useState("");
-  const [newNumber, setNewNumber] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [persons, setPersons] = useState([])
+  const [newName, setNewName] = useState("")
+  const [newNumber, setNewNumber] = useState("")
+  const [searchTerm, setSearchTerm] = useState("")
   
   const handleSearch = (event) => {
-    setSearchTerm(event.target.value.toLowerCase());
-  };
+    setSearchTerm(event.target.value.toLowerCase())
+  }
 
   const handleValue = (event) => {
     const { name, value } = event.target;
@@ -78,34 +77,71 @@ const App = () => {
     } else if (name === "number") {
       setNewNumber(value);
     }
-  };
+  }
 
-  const addPerson = (event) => {
-    event.preventDefault();
-    
-    // Check for duplicates (case insensitive)
-    if (persons.some((person) => person.name.toLowerCase() === newName.toLowerCase())) {
-      alert(`${newName} is already added to the phonebook`);
-    } else {
-      const personObject = { name: newName, number: newNumber };
-      setPersons([...persons, personObject]);
-      setNewName("");  // Clear input fields
-      setNewNumber("");
-    }
-  };
 
-  // Filter persons based on searchTerm
+
   const filteredPersons = searchTerm
     ? persons.filter((person) => person.name.toLowerCase().includes(searchTerm))
     : persons
-    
-  useEffect ( () =>{
-    axios
-    .get('http://localhost:3001/persons')
-    .then(response =>{
-      setPersons(response.data)
-    })
-  },[])
+
+  useEffect (() =>{
+  phoneService
+  .get()
+  .then(personList => setPersons(personList))},[])
+
+  const updatePerson = (id,personObject) => {
+  phoneService
+        .update(id,personObject)
+        .then(personObject => {
+          setPersons(persons.map(person => person.id === id ? personObject : person))
+
+        })
+        .catch(error => {
+          console.error(`Error updating ${newName}:`, error)
+          alert(`Failed to update ${newName}. It may have been removed from the server.`)
+          setPersons(persons.filter(person => person.id !== id))})
+          setNewName("");
+          setNewNumber("");
+
+        }
+
+  const addPerson = (event) => {
+    event.preventDefault()
+    const personObject = { name: newName, number: newNumber }
+    const existingPerson = persons.find(person => person.name.toLowerCase() === newName.toLowerCase());
+    if (existingPerson) {
+      if(window.confirm(`${newName} is already added to the phonebook, would you like to change the number?`)){
+        updatePerson(existingPerson.id,personObject)
+      }else{
+        alert("operation aborted")
+      }
+    } else {
+      phoneService
+      .create(personObject)
+      .then(personObject =>{
+      setPersons(persons => [...persons, personObject])
+      })
+    }
+    setNewName("")
+    setNewNumber("")
+  }
+  const deletePerson = (id,name) => {
+    if(window.confirm(`Are you sure you wanna delete ${name}?`))
+    {
+    phoneService
+    .deletePerson(id)
+    .then(personObject =>{
+      console.log(personObject, "was deleted from server")
+      setPersons(prevPersons => prevPersons.filter(person => person.id !== id))
+    })}
+    else{
+      console.log("deletion aborted")
+    }
+
+  }
+
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -118,9 +154,9 @@ const App = () => {
                 handleValue={handleValue}
          />
       <h2>Numbers</h2>
-      <PersonList filteredPersons={filteredPersons} />
+      <PersonList filteredPersons={filteredPersons} deletePerson = {deletePerson} />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
