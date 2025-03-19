@@ -1,0 +1,9 @@
+```mermaid
+sequenceDiagram
+    participant browser
+    participant server
+
+    Note right of browser: User submits new note - > get pushed to the notes array - > POST request get sent to the server using JSON -> DOM renders
+    browser->>server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+    Note right of server: server adds new note data to notes list
+    server->>browser: HTTP 201
