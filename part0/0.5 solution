@@ -1,0 +1,24 @@
+```mermaid
+sequenceDiagram
+    participant browser
+    participant server
+
+
+    browser->>server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+    Note right of browser: User visits SPA site
+    server-->>browser: HTTP sends HTML
+    Note right of browser: browser reads HTML content and sends GET requests to CSS and JS
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    CSS
+    browser-->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+    JS
+    Note right of browser: browser executes JS file -> sends request to JSON
+
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    Note right of server: return list of notes in json format
+    server-->>browser: JSON content
+    Note right of browser: event handler get executed and notes renders
+
+    ```
