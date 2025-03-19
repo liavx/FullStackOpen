@@ -3,6 +3,19 @@
 import { useState ,useEffect } from "react"
 import phoneService from './services/phonebook.js'
 
+
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+  return (
+    <div className="notification">
+      {message}
+    </div>
+  )
+}
+
+
 const PersonForm = ({newName,handleValue,newNumber,addPerson}) =>{
 return(
   <div>
@@ -65,7 +78,15 @@ const App = () => {
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
-  
+  const [Message, setMessage] = useState('')
+
+  const setNotification = (msg) => {
+    setMessage(msg);
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
+  };
+
   const handleSearch = (event) => {
     setSearchTerm(event.target.value.toLowerCase())
   }
@@ -95,11 +116,12 @@ const App = () => {
         .update(id,personObject)
         .then(personObject => {
           setPersons(persons.map(person => person.id === id ? personObject : person))
-
+          setNotification(` ${newName} updated`)
+          
         })
         .catch(error => {
           console.error(`Error updating ${newName}:`, error)
-          alert(`Failed to update ${newName}. It may have been removed from the server.`)
+          setNotification(`Failed to update ${newName}. It may have been removed from the server.`)
           setPersons(persons.filter(person => person.id !== id))})
           setNewName("");
           setNewNumber("");
@@ -121,6 +143,7 @@ const App = () => {
       .create(personObject)
       .then(personObject =>{
       setPersons(persons => [...persons, personObject])
+      setNotification(`${newName} sucssesfully added to server.`)
       })
     }
     setNewName("")
@@ -133,6 +156,7 @@ const App = () => {
     .deletePerson(id)
     .then(personObject =>{
       console.log(personObject, "was deleted from server")
+      setNotification(`${name}. was removed from server.`)
       setPersons(prevPersons => prevPersons.filter(person => person.id !== id))
     })}
     else{
@@ -144,6 +168,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message = {Message} />
       <h2>Phonebook</h2>
       <SearchInput handleSearch={handleSearch} searchTerm={searchTerm} />
       <h3>Add a new</h3>
