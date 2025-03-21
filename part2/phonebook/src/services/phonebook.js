@@ -1,5 +1,5 @@
 import axios from 'axios'
-const phonebook = 'http://localhost:3001/persons'
+const phonebook = 'http://localhost:3001/api/persons'
 
 const get = () => {
   const req = axios.get(phonebook)
