@@ -77,12 +77,14 @@ app.post('/api/persons' , (req,res) => {
 })
 
 app.delete('/api/persons/:id', (req,res) =>{
-    phonebook = phonebook.filter(person => person.id != req.params.id)
+    phonebook = phonebook.f
+    ilter(person => person.id != req.params.id)
     res.status(204).end()
 })
 
 
 
-
-const PORT = 3001
-app.listen(PORT , () => console.log("server is running"))
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})
