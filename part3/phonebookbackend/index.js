@@ -2,12 +2,13 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :response-time ms - :data'));
 const cors = require('cors')
 app.use(cors())
 
-morgan.token('data', function (req) { return JSON.stringify(req)})
-
+morgan.token('data', function (req) {
+    return req.body ? JSON.stringify(req.body) : ''
+  })
 let phonebook = [
     { 
       "id": "1",
@@ -71,14 +72,12 @@ app.post('/api/persons' , (req,res) => {
         number:body.number,
         id:Math.floor(Math.random() * 100000000000)
     }
-    app.use(morgan('data'))
     phonebook = phonebook.concat(person)
     res.json(person)
 })
 
 app.delete('/api/persons/:id', (req,res) =>{
-    phonebook = phonebook.f
-    ilter(person => person.id != req.params.id)
+    phonebook = phonebook.filter(person => person.id != req.params.id)
     res.status(204).end()
 })
 
