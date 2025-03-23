@@ -41,7 +41,7 @@ app.get('/api/persons/:id' , (req,res) =>{
             res.status(404).end("NO ID BEEN FOUND")
         
         }
-    })
+    }).catch(error => res.status(400).end("request rejected",error))
 })
 
 app.post('/api/persons' , (req,res) => {
