@@ -19,7 +19,6 @@ app.get('/api/persons' , (req,res) =>{
     }else{
         console.log("database is empty")
     }
-        mongoose.connection.close()
       })
 })
 
@@ -31,7 +30,7 @@ app.get('/api/info' , (req,res) =>{
     }).catch(error => res.status(500).json({error:'Error retrieving data'}))
 })
 
-app.get('/api/persons/:id' , (req,res) =>{
+app.get('/api/persons/:id' , (req,res,next) =>{
     Person.findById(req.params.id).then(person =>{
         if(person){
             res.json(person)
@@ -41,10 +40,10 @@ app.get('/api/persons/:id' , (req,res) =>{
             res.status(404).end("NO ID BEEN FOUND")
         
         }
-    }).catch(error => res.status(400).end("request rejected",error))
+    }).catch(error => next(error))
 })
 
-app.post('/api/persons' , (req,res) => {
+app.post('/api/persons' , (req,res,next) => {
     const body = req.body
     if(!body.name || !body.number) {
         return res.status(400).json({
@@ -57,13 +56,51 @@ app.post('/api/persons' , (req,res) => {
         number:body.number,
     })
 
-    person.save().then(newNote => res.json(newNote))
+    person.save().then(newNote => res.json(newNote)).catch(error => {
+        if (error.name === 'ValidationError') {
+            if (error.errors.name) {
+              return res.status(400).json({ error: 'Name must be at least 3 characters' });
+            } else if (error.errors.number) {
+              return res.status(400).json({ error: 'Invalid phone number format' });
+            }
+          }
+          next(error); 
+    })
 })
 
-app.delete('/api/persons/:id', (req,res) =>{
-    phonebook = phonebook.filter(person => person.id != req.params.id)
-    res.status(204).end()
+app.delete('/api/persons/:id', (req,res,next) =>{
+    Person.findByIdAndDelete(req.params.id)
+    .then(result => res.status(204).end())
+    .catch(error => next(error))
 })
+
+app.put(`/api/persons/:id`, (req,res,next) => {
+    const {name , number} = req.body
+    Person.findById(req.params.id)
+    .then(person => {
+        if (!person){
+            return res.status(404).end("Person does not exist");
+        }
+        person.name = name;
+        person.number = number;
+        
+        return person.save()
+        .then(updatedPerson => res.json(updatedPerson))
+        .catch(error => next(error))
+    })
+})
+
+const errorHandler = (error, req, res, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError') {
+      return res.status(400).send({ error: 'malformatted id' })
+    } 
+  
+    next(error)
+  }
+  
+app.use(errorHandler)
 
 
 
