@@ -31,6 +31,17 @@ const mostBlogs = (arr) => {
 }
 
 
+const mostLikes = (arr) => {
+  const authorLikes = arr.reduce((acc,{author,likes}) =>{
+     acc[author] = (acc[author] || 0) + likes
+     return acc
+  },{})
+     const [author , likes] = Object.entries(authorLikes).reduce((max,curr) =>{
+           return curr[1]>max[1] ? curr : max
+     },['',0])
+
+     return author ? {author:author , likes:likes} : {}
+}
 
 
 
@@ -39,7 +50,8 @@ const mostBlogs = (arr) => {
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
   }
 
 

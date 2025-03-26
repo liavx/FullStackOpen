@@ -162,3 +162,36 @@ describe('show Author with most blogs' , () => {
 
 
 })
+
+describe('show which author has most likes' , () => {
+  test('when blog list empty' ,() =>{
+    const result = listHelper.mostLikes(blog)
+    assert.deepEqual(result,{})
+  })
+
+  test("when blog list is only one" , () => {
+  const result = listHelper.mostLikes(listWithOneBlog)
+  assert.deepEqual(result,
+    {
+        author:'Edsger W. Dijkstra',
+        likes:'5'
+    }
+  )
+
+  test("when blog list is full" , () => {
+  const result = listHelper.mostLikes(blogs)
+  assert.deepEqual(result,
+    {
+        author: "Edsger W. Dijkstra",
+        likes: 17,
+    }
+  )
+
+
+  })
+
+
+  })
+
+
+})
