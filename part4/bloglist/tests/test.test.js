@@ -20,7 +20,7 @@ test('dummy returns one', () => {
 
 const listWithOneBlog = [
     {
-      _id: '5a422aa71b54a676234d17f8',
+      _id: '5a422aa71b54a676234d17fd',
       title: 'Go To Statement Considered Harmful',
       author: 'Edsger W. Dijkstra',
       url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
@@ -212,7 +212,22 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
-test.only('there are 6 notes', async () => {
+test.only('there are 6 blogs', async () => {
   const response = await api.get('/api/blogs')
   assert.strictEqual(response.body.length, 6)
+})
+
+test.only('adding a blog ', async () => {
+  await api
+    .post('/api/blogs')
+    .send(listWithOneBlog[0])
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsFinal = await api.get('/api/blogs')
+  console.log(blogsFinal.body.length)
+  assert.strictEqual(blogsFinal.body.length, blogs.length + 1)
+  const title = blogsFinal.body.map(blog => blog.title)
+  console.log(title)
+  assert(title.some(t => t.includes('Go To Statement')))
 })
