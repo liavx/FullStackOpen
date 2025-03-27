@@ -242,7 +242,7 @@ test('there are 6 blogs', async () => {
 })
 
 describe('adding a blog' , () => {
-test.only('adding a normal blog ', async () => {
+test('adding a normal blog ', async () => {
   const initialBlogs = await api.get('/api/blogs');
   await api
     .post('/api/blogs')
@@ -256,7 +256,7 @@ test.only('adding a normal blog ', async () => {
   const title = blogsFinal.body.map(blog => blog.title)
   assert(title.some(t => t.includes('War and')))
 })
-test.only('adding a blog with no likes' , async () =>{
+test('adding a blog with no likes' , async () =>{
   await api
     .post('/api/blogs')
     .send(BlogNoLiike[0])
@@ -269,18 +269,25 @@ console.log(numOfLikes)
 assert.strictEqual(numOfLikes,0)
 }
 )
-test.only('adding a blog with no title' , async() =>{
+test('adding a blog with no title' , async() =>{
   await api
   .post('/api/blogs')
   .send(restrictedBlogs[0])
   .expect(400)
 })
-test.only('adding a blog with no url' , async() =>{
+test('adding a blog with no url' , async() =>{
   await api
   .post('/api/blogs')
   .send(restrictedBlogs[1])
   .expect(400)
 })
+})
+
+test.only('checking if id is the unique identifier', async () =>{
+  const blogs = await api.get('/api/blogs');
+  blogid = Object.keys(blogs.body[0])
+  assert.strictEqual(blogid[5],"id")
+
 })
 
 after(async () => {
