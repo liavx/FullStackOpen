@@ -1,7 +1,15 @@
-const { test, describe } = require('node:test')
+const { test, describe ,beforeEach } = require('node:test')
 const assert = require('node:assert')
+const Blog = require("../models/blog.js");
 const listHelper = require('../utils/listhelper')
 const { title } = require('node:process')
+const supertest = require('supertest')
+const app = require('../app')
+const api = supertest(app)
+
+
+
+
 
 test('dummy returns one', () => {
   const blogs = []
@@ -194,4 +202,17 @@ describe('show which author has most likes' , () => {
   })
 
 
+})
+
+beforeEach(async () => {
+  await Blog.deleteMany({})
+  const blogObjects = blogs
+    .map(blog => new Blog(blog))
+  const promiseArray = blogObjects.map(blog => blog.save())
+  await Promise.all(promiseArray)
+})
+
+test.only('there are 6 notes', async () => {
+  const response = await api.get('/api/blogs')
+  assert.strictEqual(response.body.length, 6)
 })
