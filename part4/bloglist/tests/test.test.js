@@ -1,8 +1,9 @@
-const { test, describe ,beforeEach } = require('node:test')
+const { test, describe ,beforeEach , after } = require('node:test')
 const assert = require('node:assert')
 const Blog = require("../models/blog.js");
 const listHelper = require('../utils/listhelper')
 const { title } = require('node:process')
+const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
@@ -21,13 +22,36 @@ test('dummy returns one', () => {
 const listWithOneBlog = [
     {
       _id: '5a422aa71b54a676234d17fd',
-      title: 'Go To Statement Considered Harmful',
-      author: 'Edsger W. Dijkstra',
+      title: 'War and Peace',
+      author: 'Leo Tolstoy',
       url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
-      likes: 5,
+      __v: 0,
+      likes:5
+    }
+  ]
+
+  const BlogNoLiike = [
+    {
+      title: 'War and Peace',
+      author: 'Leo Tolstoy',
+      url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
       __v: 0
     }
   ]
+
+  const restrictedBlogs = [
+    {
+      author: 'Leo Tolstoy',
+      url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+      __v: 0
+    },
+    {
+      title:"checkMePlease",
+      author: 'Leo Tolstoy',
+      __v: 0
+    }
+  ]
+
   const blogs = [
       {
         _id: "5a422a851b54a676234d17f7",
@@ -212,12 +236,14 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
-test.only('there are 6 blogs', async () => {
+test('there are 6 blogs', async () => {
   const response = await api.get('/api/blogs')
   assert.strictEqual(response.body.length, 6)
 })
 
-test.only('adding a blog ', async () => {
+describe('adding a blog' , () => {
+test.only('adding a normal blog ', async () => {
+  const initialBlogs = await api.get('/api/blogs');
   await api
     .post('/api/blogs')
     .send(listWithOneBlog[0])
@@ -226,8 +252,38 @@ test.only('adding a blog ', async () => {
 
   const blogsFinal = await api.get('/api/blogs')
   console.log(blogsFinal.body.length)
-  assert.strictEqual(blogsFinal.body.length, blogs.length + 1)
+  assert.strictEqual(blogsFinal.body.length, initialBlogs.body.length + 1)
   const title = blogsFinal.body.map(blog => blog.title)
-  console.log(title)
-  assert(title.some(t => t.includes('Go To Statement')))
+  assert(title.some(t => t.includes('War and')))
 })
+test.only('adding a blog with no likes' , async () =>{
+  await api
+    .post('/api/blogs')
+    .send(BlogNoLiike[0])
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+const blogsList = await api.get('/api/blogs')
+const numOfLikes = blogsList.body[blogsList.body.length -1].likes
+console.log(numOfLikes)
+assert.strictEqual(numOfLikes,0)
+}
+)
+test.only('adding a blog with no title' , async() =>{
+  await api
+  .post('/api/blogs')
+  .send(restrictedBlogs[0])
+  .expect(400)
+})
+test.only('adding a blog with no url' , async() =>{
+  await api
+  .post('/api/blogs')
+  .send(restrictedBlogs[1])
+  .expect(400)
+})
+})
+
+after(async () => {
+  await mongoose.connection.close();
+})
+
