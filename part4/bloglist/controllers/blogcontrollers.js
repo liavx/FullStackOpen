@@ -19,5 +19,20 @@ require('express-async-errors')
     response.status(201).json(savedBlog)
   })
 
-  
+  blogRouter.delete('/blogs/:id', async (req,res) =>{
+      await Blog.findByIdAndDelete(req.params.id)
+      res.status(204).end()
+  })
+
+  blogRouter.put('/blogs/:id' , async (req , res) =>{
+    const {likes} = req.body
+    blogToUpdate = await Blog.findById(req.params.id)
+    if(!blogToUpdate){
+      return res.status(404).end()
+    }
+    blogToUpdate.likes = likes
+    updatedBlog = await blogToUpdate.save()
+    res.json(updatedBlog)
+  })
+    
   module.exports = blogRouter;
