@@ -56,7 +56,7 @@ app.post('/api/persons' , (req,res,next) => {
         number:body.number,
     })
 
-    person.save().then(newNote => res.json(newNote)).catch(error => {
+    person.save().then(newPerson => res.json(newPerson)).catch(error => {
         if (error.name === 'ValidationError') {
             if (error.errors.name) {
               return res.status(400).json({ error: 'Name must be at least 3 characters' });
