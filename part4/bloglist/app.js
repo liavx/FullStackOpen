@@ -6,6 +6,8 @@ require('express-async-errors')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const blogRouter = require("./controllers/blogcontrollers");
+const loginRouter = require("./controllers/login");
+
 const { mongoUrl } = require("./utils/config");
 
 
@@ -17,6 +19,7 @@ app.use(express.json())
 app.use("/api", blogRouter);
 app.use(errorHandler)
 app.use('/api/users', usersRouter)
+app.use('/api/login' ,loginRouter)
 
 
 
