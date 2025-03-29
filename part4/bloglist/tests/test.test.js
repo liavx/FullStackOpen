@@ -1,6 +1,7 @@
 const { test, describe ,beforeEach , after } = require('node:test')
 const assert = require('node:assert')
 const Blog = require("../models/blog.js");
+const User = require("../models/user.js");
 const listHelper = require('../utils/listhelper')
 const { title } = require('node:process')
 const mongoose = require('mongoose')
@@ -185,6 +186,7 @@ describe('show which author has most likes', () => {
 
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await User.deleteMany({})
   const blogObjects = blogs.map(blog => new Blog(blog))
   const promiseArray = blogObjects.map(blog => blog.save())
   await Promise.all(promiseArray)
@@ -263,7 +265,7 @@ describe('deletion of a blog', () => {
   })
 })
 
-test.only("check if put succeeds" , async () =>{
+test("check if put succeeds" , async () =>{
 const response = (await api.get('/api/blogs')).body
 const blogToUpdate = response[0]
 await api
@@ -274,6 +276,45 @@ await api
 const endResponse = (await api.get('/api/blogs')).body
 modifiedBlog = endResponse[0]
 assert.strictEqual(modifiedBlog.likes,15)
+})
+
+describe('adding a user check', () => {
+  test.only('adding a user with no name', async () => {
+    const response =await api
+      .post('/api/users')
+      .send({password:"ayaa"})
+      .expect(400)
+      assert.strictEqual(response.body.error, 'Username must be at least 3 characters long');
+
+  })
+
+  test.only('adding a user with no password', async () => {
+    const response = await api
+      .post('/api/users')
+      .send({username:"ayaa"})
+      .expect(400)
+      assert.strictEqual(response.body.error, 'Password must be at least 3 characters long');
+
+  })
+  test.only('adding a user with invaild username', async () => {
+    const response =await api
+      .post('/api/users')
+      .send({username:"ay",
+             password:"12345"
+      })
+      .expect(400)
+      assert.strictEqual(response.body.error, 'Username must be at least 3 characters long');
+  })
+  test.only('adding a user with invaild password', async () => {
+    const response = await api
+      .post('/api/users')
+      .send({username:"ayuas",
+             password:"12"
+      })
+      .expect(400)
+      assert.strictEqual(response.body.error, 'Password must be at least 3 characters long');
+  })
+
 })
 
 

@@ -1,5 +1,5 @@
 function errorHandler(err, req, res, next) {
-//    console.error(err)
+   console.error(err)
   
     if (err.name === 'ValidationError') {
       return res.status(400).json({
@@ -23,6 +23,10 @@ function errorHandler(err, req, res, next) {
       return res.status(409).json({
         error: 'Duplicate entry, conflict with existing data'
       })
+    }
+
+     if (err.name === 'MongoServerError' && err.message.includes('E11000 duplicate key error')) {
+      return response.status(400).json({ error: 'expected `username` to be unique' })
     }
   
     return res.status(500).json({
