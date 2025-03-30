@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState , useEffect} from 'react'
 import countriesService from './services/countriesdata.js'
+import axios from 'axios'
 
 const SearchInput = ({searchTerm,handleSearch}) =>{
   return(
@@ -28,6 +29,17 @@ const CountryView = ({one}) =>{
     </>
   )
 
+}
+
+const WeatherView = ({ data }) => {
+  return (
+    <div>
+      <h2>Weather in {data.location.name}</h2>
+      <p>Temperature: {data.current.temp_c}°C</p>
+      <p>Condition: {data.current.condition.text}</p>
+      <img src={data.current.condition.icon} alt="Weather icon" />
+    </div>
+  )
 }
 
 
@@ -62,7 +74,8 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("")
   const [states, setStates] = useState([])
   const [selectedCountry, setSelectedCountry] = useState(null);
-
+  const [weatherData, setWeatherData] = useState(null)
+  
   const handleShow = (country) => {
     setSelectedCountry(country);
   }
@@ -70,6 +83,7 @@ function App() {
   const handleSearch = (event) => {
     setSearchTerm(event.target.value.toLowerCase())
     setSelectedCountry(null)
+    setWeatherData(null);
   }
 
   const filteredCountries = searchTerm
@@ -82,7 +96,30 @@ function App() {
     .then (countriesList => setStates(countriesList))
   } ,[])
 
-
+  useEffect (()=>{
+  if(selectedCountry){
+    const fetchWeather = async () =>{
+      try{
+        const response = await axios.get( `http://api.weatherapi.com/v1/current.json?key=${import.meta.env.VITE_WEATHER_API_KEY}&q=${selectedCountry.capital}&aqi=no`)
+        setWeatherData(response.data);
+        console.log(response.data)
+      }
+      catch(error){
+        console.error('Error fetching weather Data',error)
+      }
+    }
+    fetchWeather()
+  }
+  },[selectedCountry])
+  
+  useEffect(() => {
+    if (filteredCountries.length === 1) {
+      setSelectedCountry(filteredCountries[0]);
+    } else {
+      setSelectedCountry(null);
+      setWeatherData(null); 
+    }
+  }, [filteredCountries]);
 
   if(!filteredCountries){
     return(
@@ -93,10 +130,13 @@ function App() {
   return (
     <>
     <SearchInput handleSearch={handleSearch} searchTerm={searchTerm} />
-    {selectedCountry? 
-    <CountryView one = {selectedCountry}/>
+    {selectedCountry ? 
+    <>
+      <CountryView one={selectedCountry} />
+      {weatherData && <WeatherView data={weatherData} />}
+    </>
     :
-    <CountriesList filteredCountries={filteredCountries} handleShow = {handleShow}/>
+    <CountriesList filteredCountries={filteredCountries} handleShow={handleShow} />
   }
     </>
   )
