@@ -86,6 +86,7 @@ function App() {
     setWeatherData(null);
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const filteredCountries = searchTerm
     ? states.filter((state) => state.name.common.toLowerCase().includes(searchTerm))
     : []
