@@ -2,14 +2,14 @@
 
 import { useState ,useEffect } from "react"
 import phoneService from './services/phonebook.js'
-
+import './index.css';
 
 const Notification = ({ message }) => {
   if (message === null) {
     return null
   }
   return (
-    <div className="notification">
+    <div className="notification show">
       {message}
     </div>
   )

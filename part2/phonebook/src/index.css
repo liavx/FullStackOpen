@@ -68,14 +68,15 @@ button:focus-visible {
 }
 
 .notification {
+  border: none;
   padding: 10px;
-  margin-bottom: 20px;
-  border: 2px solid red;
-  color: red;
-  background-color: #ffe6e6;
-  border-radius: 5px;
-  font-weight: bold;
-  text-align: center;
+  margin: 10px 0;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.notification.show {
+  border: 1px solid #ccc;
 }
 
 @media (prefers-color-scheme: light) {
