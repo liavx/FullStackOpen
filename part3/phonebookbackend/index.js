@@ -43,29 +43,28 @@ app.get('/api/persons/:id' , (req,res,next) =>{
     }).catch(error => next(error))
 })
 
-app.post('/api/persons' , (req,res,next) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body
-    if(!body.name || !body.number) {
+    if (!body.name || !body.number) {
         return res.status(400).json({
-            error:'content missing'
+            error: 'content missing'
         })
     }
 
-    const person = new Person ({
-        name:body.name,
-        number:body.number,
+    const person = new Person({
+        name: body.name,
+        number: body.number,
     })
 
-    person.save().then(newPerson => res.json(newPerson)).catch(error => {
-        if (error.name === 'ValidationError') {
-            if (error.errors.name) {
-              return res.status(400).json({ error: 'Name must be at least 3 characters' });
-            } else if (error.errors.number) {
-              return res.status(400).json({ error: 'Invalid phone number format' });
+    person.save()
+        .then(newPerson => res.json(newPerson))
+        .catch(error => {
+            if (error.name === 'ValidationError') {
+                const messages = Object.values(error.errors).map(err => err.message)
+                return res.status(400).json({ error: messages.join(', ') })
             }
-          }
-          next(error); 
-    })
+            next(error)
+        })
 })
 
 app.delete('/api/persons/:id', (req,res,next) =>{
