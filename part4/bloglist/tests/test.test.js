@@ -187,9 +187,19 @@ describe('show which author has most likes', () => {
 beforeEach(async () => {
   await Blog.deleteMany({})
   await User.deleteMany({})
-  const blogObjects = blogs.map(blog => new Blog(blog))
+
+  await api.post('/api/users').send({username:"viki",password:"biki"})
+  const user = await User.findOne({ username: "viki" });
+  const loginResponse = await api.post('/api/login').send({username:"viki",password:"biki"})
+  token = `Bearer ${loginResponse.body.token}`
+
+  const blogObjects = blogs.map(blog => new Blog({...blog,user:user._id}))
   const promiseArray = blogObjects.map(blog => blog.save())
+
   await Promise.all(promiseArray)
+  user.blogs = blogObjects.map(blog => blog._id);
+  await user.save();
+
 })
 
 test('there are 6 blogs', async () => {
@@ -202,6 +212,7 @@ describe('adding a blog', () => {
     const initialBlogs = await api.get('/api/blogs')
     await api
       .post('/api/blogs')
+      .set('Authorization', token)  
       .send(listWithOneBlog[0])
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -216,6 +227,7 @@ describe('adding a blog', () => {
   test('adding a blog with no likes', async () => {
     await api
       .post('/api/blogs')
+      .set('Authorization', token)  
       .send(BlogNoLiike[0])
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -229,6 +241,7 @@ describe('adding a blog', () => {
   test('adding a blog with no title', async () => {
     await api
       .post('/api/blogs')
+      .set('Authorization', token)  
       .send(restrictedBlogs[0])
       .expect(400)
   })
@@ -236,15 +249,23 @@ describe('adding a blog', () => {
   test('adding a blog with no url', async () => {
     await api
       .post('/api/blogs')
+      .set('Authorization', token)  
       .send(restrictedBlogs[1])
       .expect(400)
+  })
+
+  test.only('adding a blog with no token' , async () =>{
+    await api
+    .post('/api/blogs')
+    .send(listWithOneBlog[0])
+    .expect(401)
   })
 })
 
 test('checking if id is the unique identifier', async () => {
   const blogs = await api.get('/api/blogs')
   const blogid = Object.keys(blogs.body[0])
-  assert.strictEqual(blogid[5], "id")
+  assert.strictEqual(blogid[6], "id")
 })
 
 describe('deletion of a blog', () => {
@@ -255,6 +276,7 @@ describe('deletion of a blog', () => {
 
     await api
       .delete(`/api/blogs/${deleteBlog.id}`)
+      .set('Authorization', token)  
       .expect(204)
 
     const endResponse = await api.get('/api/blogs')
@@ -279,7 +301,7 @@ assert.strictEqual(modifiedBlog.likes,15)
 })
 
 describe('adding a user check', () => {
-  test.only('adding a user with no name', async () => {
+  test('adding a user with no name', async () => {
     const response =await api
       .post('/api/users')
       .send({password:"ayaa"})
@@ -288,7 +310,7 @@ describe('adding a user check', () => {
 
   })
 
-  test.only('adding a user with no password', async () => {
+  test('adding a user with no password', async () => {
     const response = await api
       .post('/api/users')
       .send({username:"ayaa"})
@@ -296,7 +318,7 @@ describe('adding a user check', () => {
       assert.strictEqual(response.body.error, 'Password must be at least 3 characters long');
 
   })
-  test.only('adding a user with invaild username', async () => {
+  test('adding a user with invaild username', async () => {
     const response =await api
       .post('/api/users')
       .send({username:"ay",
@@ -305,7 +327,7 @@ describe('adding a user check', () => {
       .expect(400)
       assert.strictEqual(response.body.error, 'Username must be at least 3 characters long');
   })
-  test.only('adding a user with invaild password', async () => {
+  test('adding a user with invaild password', async () => {
     const response = await api
       .post('/api/users')
       .send({username:"ayuas",

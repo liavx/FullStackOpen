@@ -17,9 +17,9 @@ mongoose.connect(mongoUrl)
 app.use(cors())
 app.use(express.json())
 app.use("/api", blogRouter);
-app.use(errorHandler)
 app.use('/api/users', usersRouter)
 app.use('/api/login' ,loginRouter)
+app.use(errorHandler)
 
 
 
