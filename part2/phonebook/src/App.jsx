@@ -144,11 +144,10 @@ const App = () => {
       .then(personObject =>{
       setPersons(persons => [...persons, personObject])
       setNotification(`${newName} sucssesfully added to server.`)
-      }).catch( (error) => { 
+      }).catch((error) => { 
         console.log(error.response.data.error)
-        setNotification("Person name can't be less than 3 words");
-      }
-    )
+        setNotification(error.response.data.error); 
+      })
     }
     setNewName("")
     setNewNumber("")
