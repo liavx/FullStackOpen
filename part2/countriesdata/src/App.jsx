@@ -114,13 +114,10 @@ function App() {
   },[selectedCountry])
   
   useEffect(() => {
-    if (filteredCountries.length === 1) {
+    if (filteredCountries.length === 1 && !selectedCountry) {
       setSelectedCountry(filteredCountries[0]);
-    } else {
-      setSelectedCountry(null);
-      setWeatherData(null); 
     }
-  }, [filteredCountries]);
+  }, [filteredCountries, selectedCountry]);
 
   if(!filteredCountries){
     return(
