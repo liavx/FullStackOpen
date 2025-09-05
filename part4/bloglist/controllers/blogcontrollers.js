@@ -57,5 +57,38 @@ const tokenExtractor = require('../middleware/tokenExtract');
     updatedBlog = await blogToUpdate.save()
     res.json(updatedBlog)
   })
-    
+
+  blogRouter.post('/blogs/:id/like', tokenExtractor, async (req, res, next) => {
+    try {
+      const blog = await Blog.findById(req.params.id)
+      if (!blog) return res.status(404).end()
+  
+      const uid = req.user.id
+      if (!blog.likedBy.some(id => id.toString() === uid)) {
+        blog.likedBy.push(uid)
+        blog.likes = blog.likedBy.length
+        await blog.save()
+      }
+  
+      const populated = await blog.populate('user', { username: 1})
+      res.json(populated)
+    } catch (e) { next(e) }
+  })
+  
+  blogRouter.delete('/blogs/:id/like', tokenExtractor, async (req, res, next) => {
+    try {
+      const blog = await Blog.findById(req.params.id)
+      if (!blog) return res.status(404).end()
+  
+      const uid = req.user.id
+      blog.likedBy = blog.likedBy.filter(id => id.toString() !== uid)
+      blog.likes = blog.likedBy.length
+      await blog.save()
+  
+      const populated = await blog.populate('user', { username: 1})
+      res.json(populated)
+    } catch (e) { next(e) }
+  })
+  
+  
   module.exports = blogRouter;

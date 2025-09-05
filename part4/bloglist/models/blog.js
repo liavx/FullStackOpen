@@ -11,6 +11,7 @@ const blogSchema = new mongoose.Schema({
           ref: 'User'
         }
       ],
+      likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 })
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {
