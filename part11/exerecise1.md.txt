@@ -1,0 +1,11 @@
+For this exercise I chose the Python ecosystem. For linting the most commonly used tools are flake8, Pylint or Black.
+These tools ensure that the code follows consistent formatting rules and catches bad practices before they turn into bugs.
+For testing, the standart tool in Python is pytest, a simple and powerful framework for writing unit tests and integration tests.
+In terms of building, Python apps are usually packaged using tools like setuptools,poetry or pip-build which create distribution-ready artifcats.
+that can be deployed to servers.
+
+
+Jenkins and GitHub actions as we learned are two reliable CI solutions. Other popular CI/CD 
+can be GitLab Ci, Travis CI, CircleCI or Azure DevOps Pipelines. All of them allow automatic testing, building and deploying software.
+The choice often depends on integration needs and cost. For our little and modest project, A cloud-based solution such as GitHub Actions
+is easier to start with and may fit our team seamlessy. If this project succeeds and then we might have to start using our own software like Jenkins.
