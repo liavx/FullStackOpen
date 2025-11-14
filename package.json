@@ -3,5 +3,8 @@
     "axios": "^1.8.4",
     "mongoose": "^8.12.2",
     "redux": "^5.0.1"
-  }
+  },
+  "scripts": {
+  "lint": "eslint ."
+}
 }
