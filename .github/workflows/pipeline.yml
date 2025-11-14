@@ -15,7 +15,9 @@ jobs:
             node-version : '20'
       - name: Install dependecies
         run: npm install
+      - name: install eslint
+        run: npm install eslint --save-dev
       - name: Check style
         run: npm run eslint
-      - name: check list of depe
-        run: npm run
+     
+
