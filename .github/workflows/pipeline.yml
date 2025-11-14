@@ -17,9 +17,7 @@ jobs:
         run: npm install
       - name: audit fix
         run: npm audit fix
-      - name: install eslint
-        run: npm install eslint @eslint/js --save-dev
       - name: Check style
-        run: npm run eslint
+        run: npm run lint
      
 
