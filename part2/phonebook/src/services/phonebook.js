@@ -7,8 +7,8 @@ const get = () => {
 }
 
 const getSpecific = (id) => {
-const req = axios.get(`${phonebook}/${id}`)
-return req.then(response => response.data)
+  const req = axios.get(`${phonebook}/${id}`)
+  return req.then(response => response.data)
 
 }
 
@@ -18,8 +18,8 @@ const create = newPerson => {
 }
 
 const deletePerson = id =>{
-   const req = axios.delete(`${phonebook}/${id}`)
-   return req.then (response => response.data)
+  const req = axios.delete(`${phonebook}/${id}`)
+  return req.then (response => response.data)
 }
 
 const update = (id, updatedPerson) => {

@@ -2,6 +2,7 @@ import globals from 'globals'
 import js from '@eslint/js'
 import stylisticJs from '@stylistic/eslint-plugin'
 
+
 export default [
   {
     ...js.configs.recommended,
@@ -13,16 +14,16 @@ export default [
       '@stylistic/js/linebreak-style': ['error', 'unix'],
       '@stylistic/js/quotes': ['error', 'single'],
       '@stylistic/js/semi': ['error', 'never'],
-      
     }, 
   },
   {
     files: ['**/*.js'],
     languageOptions: {
-      sourceType: 'module', // Changed from 'commonjs' to 'module'
+      sourceType: 'commonjs',
       globals: { ...globals.node },
       ecmaVersion: 'latest',
+      sourceType: 'module',
     },
-    ignores: ['dist/**'], 
+    ignores: ['dist/**','**/eslint.config.js','**/vite.config.js'], 
   },
 ]

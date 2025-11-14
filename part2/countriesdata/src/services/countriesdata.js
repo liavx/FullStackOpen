@@ -7,8 +7,8 @@ const get = () => {
 }
 
 const getSpecific = (id) => {
-const req = axios.get(`${countries}/${id}`)
-return req.then(response => response.data)
+  const req = axios.get(`${countries}/${id}`)
+  return req.then(response => response.data)
 
 }
 
