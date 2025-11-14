@@ -5,13 +5,13 @@ const blogSchema = new mongoose.Schema({
   author: { type: String },
   url: { type: String, required: true },
   likes: { type: Number },
-    user: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'User'
-        }
-      ],
-      likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+  user: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ],
+  likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 })
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {

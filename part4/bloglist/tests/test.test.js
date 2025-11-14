@@ -1,7 +1,7 @@
 const { test, describe ,beforeEach , after } = require('node:test')
 const assert = require('node:assert')
-const Blog = require("../models/blog.js");
-const User = require("../models/user.js");
+const Blog = require('../models/blog.js')
+const User = require('../models/user.js')
 const listHelper = require('../utils/listhelper')
 const { title } = require('node:process')
 const mongoose = require('mongoose')
@@ -17,101 +17,101 @@ test('dummy returns one', () => {
 })
 
 const listWithOneBlog = [
-    {
-      title: 'War and Peace',
-      author: 'Leo Tolstoy',
-      url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
-      __v: 0,
-      likes:1
-    }
-  ]
+  {
+    title: 'War and Peace',
+    author: 'Leo Tolstoy',
+    url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+    __v: 0,
+    likes:1
+  }
+]
 
-  const BlogNoLiike = [
-    {
-      title: 'War and Peace',
-      author: 'Leo Tolstoy',
-      url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
-      __v: 0
-    }
-  ]
+const BlogNoLiike = [
+  {
+    title: 'War and Peace',
+    author: 'Leo Tolstoy',
+    url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+    __v: 0
+  }
+]
 
-  const restrictedBlogs = [
-    {
-      author: 'Leo Tolstoy',
-      url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
-      __v: 0
-    },
-    {
-      title:"checkMePlease",
-      author: 'Leo Tolstoy',
-      __v: 0
-    }
-  ]
+const restrictedBlogs = [
+  {
+    author: 'Leo Tolstoy',
+    url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+    __v: 0
+  },
+  {
+    title:'checkMePlease',
+    author: 'Leo Tolstoy',
+    __v: 0
+  }
+]
 
-  const blogs = [
-      {
-        title: "React patterns",
-        author: "Michael Chan",
-        url: "https://reactpatterns.com/",
-        likes: 7,
-        __v: 0
-      },
-      {
-        title: "Go To Statement Considered Harmful",
-        author: "Edsger W. Dijkstra",
-        url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-        likes: 5,
-        __v: 0
-      },
-      {
-        title: "Canonical string reduction",
-        author: "Edsger W. Dijkstra",
-        url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
-        likes: 12,
-        __v: 0
-      },
-      {
-        title: "First class tests",
-        author: "Robert C. Martin",
-        url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
-        likes: 10,
-        __v: 0
-      },
-      {
-        title: "TDD harms architecture",
-        author: "Robert C. Martin",
-        url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
-        likes: 0,
-        __v: 0
-      },
-      {
-        title: "Type wars",
-        author: "Robert C. Martin",
-        url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
-        likes: 2,
-        __v: 0
-      }  
-    ]
+const blogs = [
+  {
+    title: 'React patterns',
+    author: 'Michael Chan',
+    url: 'https://reactpatterns.com/',
+    likes: 7,
+    __v: 0
+  },
+  {
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 5,
+    __v: 0
+  },
+  {
+    title: 'Canonical string reduction',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+    likes: 12,
+    __v: 0
+  },
+  {
+    title: 'First class tests',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+    likes: 10,
+    __v: 0
+  },
+  {
+    title: 'TDD harms architecture',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+    likes: 0,
+    __v: 0
+  },
+  {
+    title: 'Type wars',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+    likes: 2,
+    __v: 0
+  }  
+]
 
-    const blog = []
+const blog = []
 
 describe('total likes', () => {
   
-    test('when list has only one blog, equals the likes of that', () => {
-      const result = listHelper.totalLikes(listWithOneBlog)
-      assert.strictEqual(result, 1)
-    })
-
-    test('when list is empty' ,() => {
-        const result = listHelper.totalLikes(blog)
-        assert.strictEqual(result,0)
-    })
-
-    test('when list is full check sum' , () => {
-        const result = listHelper.totalLikes(blogs)
-        assert.strictEqual(result,36)
-    })
+  test('when list has only one blog, equals the likes of that', () => {
+    const result = listHelper.totalLikes(listWithOneBlog)
+    assert.strictEqual(result, 1)
   })
+
+  test('when list is empty' ,() => {
+    const result = listHelper.totalLikes(blog)
+    assert.strictEqual(result,0)
+  })
+
+  test('when list is full check sum' , () => {
+    const result = listHelper.totalLikes(blogs)
+    assert.strictEqual(result,36)
+  })
+})
 
 describe('show blog with most likes', () => {
   test('when blog list empty', () => {
@@ -119,7 +119,7 @@ describe('show blog with most likes', () => {
     assert.deepEqual(result, {})
   })
 
-  test("when blog list is only one", () => {
+  test('when blog list is only one', () => {
     const result = listHelper.favoriteBlog(listWithOneBlog)
     assert.deepEqual(result, {
       title: 'War and Peace',
@@ -128,11 +128,11 @@ describe('show blog with most likes', () => {
     })
   })
 
-  test("when blog list is full", () => {
+  test('when blog list is full', () => {
     const result = listHelper.favoriteBlog(blogs)
     assert.deepEqual(result, {
-      title: "Canonical string reduction",
-      author: "Edsger W. Dijkstra",
+      title: 'Canonical string reduction',
+      author: 'Edsger W. Dijkstra',
       likes: 12
     })
   })
@@ -144,7 +144,7 @@ describe('show Author with most blogs', () => {
     assert.deepEqual(result, {})
   })
 
-  test("when blog list is only one", () => {
+  test('when blog list is only one', () => {
     const result = listHelper.mostBlogs(listWithOneBlog)
     assert.deepEqual(result, {
       author: 'Leo Tolstoy',
@@ -152,10 +152,10 @@ describe('show Author with most blogs', () => {
     })
   })
 
-  test("when blog list is full", () => {
+  test('when blog list is full', () => {
     const result = listHelper.mostBlogs(blogs)
     assert.deepEqual(result, {
-      author: "Robert C. Martin",
+      author: 'Robert C. Martin',
       numOfBlogs: 3,
     })
   })
@@ -167,7 +167,7 @@ describe('show which author has most likes', () => {
     assert.deepEqual(result, {})
   })
 
-  test("when blog list is only one", () => {
+  test('when blog list is only one', () => {
     const result = listHelper.mostLikes(listWithOneBlog)
     assert.deepEqual(result, {
       author: 'Leo Tolstoy',
@@ -175,10 +175,10 @@ describe('show which author has most likes', () => {
     })
   })
 
-  test("when blog list is full", () => {
+  test('when blog list is full', () => {
     const result = listHelper.mostLikes(blogs)
     assert.deepEqual(result, {
-      author: "Edsger W. Dijkstra",
+      author: 'Edsger W. Dijkstra',
       likes: 17,
     })
   })
@@ -188,17 +188,17 @@ beforeEach(async () => {
   await Blog.deleteMany({})
   await User.deleteMany({})
 
-  await api.post('/api/users').send({username:"viki",password:"biki"})
-  const user = await User.findOne({ username: "viki" });
-  const loginResponse = await api.post('/api/login').send({username:"viki",password:"biki"})
+  await api.post('/api/users').send({username:'viki',password:'biki'})
+  const user = await User.findOne({ username: 'viki' })
+  const loginResponse = await api.post('/api/login').send({username:'viki',password:'biki'})
   token = `Bearer ${loginResponse.body.token}`
 
   const blogObjects = blogs.map(blog => new Blog({...blog,user:user._id}))
   const promiseArray = blogObjects.map(blog => blog.save())
 
   await Promise.all(promiseArray)
-  user.blogs = blogObjects.map(blog => blog._id);
-  await user.save();
+  user.blogs = blogObjects.map(blog => blog._id)
+  await user.save()
 
 })
 
@@ -256,16 +256,16 @@ describe('adding a blog', () => {
 
   test.only('adding a blog with no token' , async () =>{
     await api
-    .post('/api/blogs')
-    .send(listWithOneBlog[0])
-    .expect(401)
+      .post('/api/blogs')
+      .send(listWithOneBlog[0])
+      .expect(401)
   })
 })
 
 test('checking if id is the unique identifier', async () => {
   const blogs = await api.get('/api/blogs')
   const blogid = Object.keys(blogs.body[0])
-  assert.strictEqual(blogid[6], "id")
+  assert.strictEqual(blogid[6], 'id')
 })
 
 describe('deletion of a blog', () => {
@@ -287,54 +287,54 @@ describe('deletion of a blog', () => {
   })
 })
 
-test("check if put succeeds" , async () =>{
-const response = (await api.get('/api/blogs')).body
-const blogToUpdate = response[0]
-await api
+test('check if put succeeds' , async () =>{
+  const response = (await api.get('/api/blogs')).body
+  const blogToUpdate = response[0]
+  await api
     .put(`/api/blogs/${blogToUpdate.id}`)
     .send({likes:15})
     .expect(200)
 
-const endResponse = (await api.get('/api/blogs')).body
-modifiedBlog = endResponse[0]
-assert.strictEqual(modifiedBlog.likes,15)
+  const endResponse = (await api.get('/api/blogs')).body
+  modifiedBlog = endResponse[0]
+  assert.strictEqual(modifiedBlog.likes,15)
 })
 
 describe('adding a user check', () => {
   test('adding a user with no name', async () => {
     const response =await api
       .post('/api/users')
-      .send({password:"ayaa"})
+      .send({password:'ayaa'})
       .expect(400)
-      assert.strictEqual(response.body.error, 'Username must be at least 3 characters long');
+    assert.strictEqual(response.body.error, 'Username must be at least 3 characters long')
 
   })
 
   test('adding a user with no password', async () => {
     const response = await api
       .post('/api/users')
-      .send({username:"ayaa"})
+      .send({username:'ayaa'})
       .expect(400)
-      assert.strictEqual(response.body.error, 'Password must be at least 3 characters long');
+    assert.strictEqual(response.body.error, 'Password must be at least 3 characters long')
 
   })
   test('adding a user with invaild username', async () => {
     const response =await api
       .post('/api/users')
-      .send({username:"ay",
-             password:"12345"
+      .send({username:'ay',
+        password:'12345'
       })
       .expect(400)
-      assert.strictEqual(response.body.error, 'Username must be at least 3 characters long');
+    assert.strictEqual(response.body.error, 'Username must be at least 3 characters long')
   })
   test('adding a user with invaild password', async () => {
     const response = await api
       .post('/api/users')
-      .send({username:"ayuas",
-             password:"12"
+      .send({username:'ayuas',
+        password:'12'
       })
       .expect(400)
-      assert.strictEqual(response.body.error, 'Password must be at least 3 characters long');
+    assert.strictEqual(response.body.error, 'Password must be at least 3 characters long')
   })
 
 })

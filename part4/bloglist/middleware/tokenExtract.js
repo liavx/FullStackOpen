@@ -15,16 +15,16 @@ const tokenExtractor = (request, response, next) => {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
 
-    const decodedToken = jwt.verify(token, process.env.SECRET)
-    console.log('Decoded Token:', decodedToken)
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+  console.log('Decoded Token:', decodedToken)
 
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: 'token invalid' })
-    }
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
 
     
-    request.user = decodedToken
-    next()
+  request.user = decodedToken
+  next()
 }
 
 module.exports = tokenExtractor
