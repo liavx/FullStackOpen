@@ -21,7 +21,7 @@ jobs:
       - name: Install dependecies
         run: npm install
       - name: audit fix
-        run: npm audit fix
+        run: npm audit fix --force
       - name: Check style
         run: npm run lint
       - name: Build
