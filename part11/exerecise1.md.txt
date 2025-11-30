@@ -7,5 +7,5 @@ that can be deployed to servers.
 
 Jenkins and GitHub actions as we learned are two reliable CI solutions. Other popular CI/CD 
 can be GitLab Ci, Travis CI, CircleCI or Azure DevOps Pipelines. All of them allow automatic testing, building and deploying software.
-The choice often depends on integration needs and cost. For our little and modest project, A cloud-based solution such as GitHub Actions
+The choice often depends on integration needs and cost. Forr our little and modest project, A cloud-based solution such as GitHub Actions
 is easier to start with and may fit our team seamlessy. If this project succeeds and then we might have to start using our own software like Jenkins.
